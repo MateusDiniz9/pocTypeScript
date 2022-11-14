@@ -34,7 +34,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { read } from "../repository/movie-repository.js";
+import { movieSchema } from "./../schemas/movie-schema";
+import { read, insert, updateById, deleteById, listByPlatform, } from "../repository/movie-repository.js";
 function readMovies(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var result, error_1;
@@ -60,23 +61,115 @@ function readMovies(req, res) {
 }
 function insertMovie(req, res) {
     return __awaiter(this, void 0, void 0, function () {
+        var newMovie, error, data, error_2;
         return __generator(this, function (_a) {
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0:
+                    newMovie = req.body;
+                    error = movieSchema.validate(newMovie).error;
+                    if (error) {
+                        return [2 /*return*/, res.status(400).send({ message: error.message })];
+                    }
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    data = {
+                        name: newMovie.name,
+                        platform: newMovie.platform,
+                        genre: newMovie.genre,
+                        status: newMovie.status,
+                        sinopse: newMovie.sinopse
+                    };
+                    return [4 /*yield*/, insert(data)];
+                case 2:
+                    _a.sent();
+                    res.send(201);
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_2 = _a.sent();
+                    console.error(error_2);
+                    res.sendStatus(500);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
         });
     });
 }
 function updateMovie(req, res) {
     return __awaiter(this, void 0, void 0, function () {
+        var id, data, error_3;
         return __generator(this, function (_a) {
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0:
+                    id = req.params.id;
+                    data = req.body ? req.body : "";
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, updateById(id, data.sinopse)];
+                case 2:
+                    _a.sent();
+                    res.send(200);
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_3 = _a.sent();
+                    console.error(error_3);
+                    res.sendStatus(500);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
         });
     });
 }
 function deleteMovie(req, res) {
     return __awaiter(this, void 0, void 0, function () {
+        var id, error_4;
         return __generator(this, function (_a) {
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0:
+                    id = req.params.id;
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, deleteById(id)];
+                case 2:
+                    _a.sent();
+                    res.send(200);
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_4 = _a.sent();
+                    console.error(error_4);
+                    res.sendStatus(500);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
         });
     });
 }
-export { readMovies, insertMovie, updateMovie, deleteMovie };
+function listMoviesByPlatform(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var platform, result, error_5;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    platform = req.params.platform;
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 4, , 5]);
+                    return [4 /*yield*/, listByPlatform(platform)];
+                case 2: return [4 /*yield*/, (_a.sent()).rows];
+                case 3:
+                    result = _a.sent();
+                    res.send(result).status(200);
+                    return [3 /*break*/, 5];
+                case 4:
+                    error_5 = _a.sent();
+                    console.error(error_5);
+                    res.sendStatus(500);
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
+            }
+        });
+    });
+}
+export { readMovies, insertMovie, updateMovie, deleteMovie, listMoviesByPlatform, };

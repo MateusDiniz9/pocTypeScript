@@ -1,11 +1,10 @@
-
 type Movie = {
-    id?: number,
-    name: string,
-    platform: string,
-    genre: string,
-    status?: boolean
-    sinopse?: string
-}
+  id?: number;
+  name: string;
+  platform: string;
+  genre: string;
+  status?: boolean;
+  sinopse?: string;
+};
 
-export {Movie}
+export { Movie };
